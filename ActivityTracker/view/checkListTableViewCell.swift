@@ -9,6 +9,8 @@
 import UIKit
 
 class checkListTableViewCell: UITableViewCell {
+    @IBOutlet weak var btnCheck: UIButton!
+    @IBOutlet weak var lblTitle: UILabel!
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -20,5 +22,4 @@ class checkListTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-
 }

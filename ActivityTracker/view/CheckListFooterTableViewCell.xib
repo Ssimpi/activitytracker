@@ -36,6 +36,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="59.5"/>
                     </button>
                 </subviews>
+                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                 <constraints>
                     <constraint firstAttribute="bottom" secondItem="qr5-8F-CHF" secondAttribute="bottom" id="876-cm-Wqc"/>
                     <constraint firstItem="KNH-0s-KZH" firstAttribute="leading" secondItem="1Zc-fy-Xew" secondAttribute="trailing" constant="8" id="DJS-m8-t2B"/>
