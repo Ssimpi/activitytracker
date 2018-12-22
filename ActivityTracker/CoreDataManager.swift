@@ -23,6 +23,7 @@ class CoreDataManager {
         let mediaEntity = NSEntityDescription.entity(forEntityName: "Activity", in: context)
         let newActivity = NSManagedObject(entity: mediaEntity!, insertInto: context)
         newActivity.setValue(imageUrl, forKey: "image")
+        newActivity.setValue(id, forKey: "id")
         newActivity.setValue(title, forKey: "title")
         newActivity.setValue(description, forKey: "descriptions")
         newActivity.setValue(date, forKey: "dueDate")
@@ -40,11 +41,16 @@ class CoreDataManager {
         }
         return true
     }
-    func saveCheckList(task:String) -> Bool {
+    func saveCheckList(id:String, task:String, parentActivityID:Int64, isDone:Bool) -> Bool {
         let context = appDelegate.persistentContainer.viewContext
         let Entity = NSEntityDescription.entity(forEntityName: "CheckList", in: context)
         let newCheckList = NSManagedObject(entity: Entity!, insertInto: context)
+        
         newCheckList.setValue(task, forKey: "task")
+        newCheckList.setValue(id, forKey: "id")
+        newCheckList.setValue(parentActivityID, forKey: "parentActivityId")
+        newCheckList.setValue(isDone, forKey: "isDone")
+        
         
         do {
             try context.save()
@@ -89,9 +95,10 @@ class CoreDataManager {
     }
     
     
-    func fetchCheckList() -> [CheckListModel]{
+    func fetchCheckListForActivity(activityId:Int64) -> [CheckListModel]{
         let context = appDelegate.persistentContainer.viewContext
         let request = NSFetchRequest<NSFetchRequestResult>(entityName: "CheckList")
+        request.predicate = NSPredicate(format: "parentActivityId == %@", NSNumber(value: activityId))
         request.returnsObjectsAsFaults = false
         var taskList:[CheckListModel] = []
         
@@ -100,7 +107,11 @@ class CoreDataManager {
             taskList = []
             for data in result as! [NSManagedObject] {
                 let task:String = data.value(forKey: "task") as! String
-                let newtask:CheckListModel = CheckListModel(task: task)
+                let id:String = data.value(forKey: "id") as! String
+                let parentActivityId:Int64 = data.value(forKey: "parentActivityId") as! Int64
+                let isDone:Bool = data.value(forKey: "isDone") as! Bool
+                
+                let newtask:CheckListModel = CheckListModel(id: id, task: task, parentActivityId: parentActivityId, isDone: isDone)
                 taskList.append(newtask)
             }
         } catch {
@@ -110,6 +121,59 @@ class CoreDataManager {
         }
         return taskList
     }
+    
+    
+    func fetchCountOfCheckListForActivity(activityId:Int64) -> (Int, Int){
+        let context = appDelegate.persistentContainer.viewContext
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "CheckList")
+        request.predicate = NSPredicate(format: "parentActivityId == %@", NSNumber(value: activityId))
+        request.returnsObjectsAsFaults = false
+        
+        do {
+            let result = try context.fetch(request)
+            let totalCount:Int = result.count
+            var doneCount:Int = 0
+            for data in result as! [NSManagedObject] {
+                let done:Bool = data.value(forKey: "isDone") as! Bool
+                if done {
+                    doneCount = doneCount+1
+                }
+            }
+            return (doneCount, totalCount)
+        } catch {
+            print("Failed")
+           return(0,0)
+        }
+    }
+    
+    
+    func updateDoneStatusCheckList(checkid:String, status:Bool) {
+        let context = appDelegate.persistentContainer.viewContext
+        let request = NSFetchRequest<NSFetchRequestResult>(entityName: "CheckList")
+        request.returnsObjectsAsFaults = false
+        request.predicate = NSPredicate(format: "id == %@", checkid)
+        
+        do {
+            let results = try context.fetch(request) as? [NSManagedObject]
+            if results?.count != 0 {
+                //let totalTime:Bool = results?[0].value(forKey: "isDone") as! Bool
+                results?[0].setValue(status, forKey: "isDone")
+            }
+        } catch {
+            print("Fetch Failed: \(error)")
+        }
+        
+        do {
+            try context.save()
+        }
+        catch {
+            print("Saving Core Data Failed: \(error)")
+        }
+    }
+    
+    
+    
+    
 
 func getRunningActivity() -> [Activities] {
     let context = appDelegate.persistentContainer.viewContext

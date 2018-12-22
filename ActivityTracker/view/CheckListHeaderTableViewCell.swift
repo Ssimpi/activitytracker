@@ -10,6 +10,8 @@ import UIKit
 
 class CheckListHeaderTableViewCell: UITableViewCell {
 
+    @IBOutlet weak var lblTitle: UILabel!
+    @IBOutlet weak var lblCheckListCount: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

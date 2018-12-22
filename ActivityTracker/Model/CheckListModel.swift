@@ -8,5 +8,9 @@
 
 import Foundation
 struct CheckListModel {
+    let id:String
     let task:String
+    let parentActivityId:Int64
+    let isDone:Bool
+    
 }

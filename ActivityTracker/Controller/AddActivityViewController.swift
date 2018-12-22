@@ -41,11 +41,7 @@ class AddActivityViewController: UIViewController, UITextViewDelegate {
     @IBAction func btnAddActivityClicked(_ sender: Any) {
 
         CheckTextFieldsEmpyOrNot()
-        let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyBoard.instantiateViewController(withIdentifier: "CheckListView") as! CheckListViewController
-        vc.isComingFromAddActivity = true
-        self.present(vc, animated: true, completion: nil)
-       // self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
     
     //MARK: Check wether textfields or empty or not
@@ -73,7 +69,9 @@ class AddActivityViewController: UIViewController, UITextViewDelegate {
         }
 
         let id = Int.random(in: 0..<9223372036854775807)
-        CoreDataManager.sharedInstance.saveActivities(id: Int64(id), imageUrl: pickedImageProduct!, title: txtTitle.text ?? "" , description: txtDescription.text, date: (txtDueDate?.text)!, timeHH: 00, timeMM: 00, timeSS: 00, totalTime: 0, isRunning: false)    }
+        CoreDataManager.sharedInstance.saveActivities(id: Int64(id), imageUrl: pickedImageProduct!, title: txtTitle.text ?? "" , description: txtDescription.text, date: (txtDueDate?.text)!, timeHH: 00, timeMM: 00, timeSS: 00, totalTime: 0, isRunning: false)
+        
+    }
     // Shows alert.
     func alert(withTitle title: String,
                andMessage message: String,

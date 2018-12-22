@@ -24,6 +24,7 @@ class ActivityTableViewCell: UITableViewCell {
     @IBOutlet weak var btnPlayOrPause: UIButton!
     @IBOutlet weak var lblCheckListCount: UILabel!
     @IBOutlet weak var btnCheckList: UIButton!
+    @IBOutlet weak var imgCheckList:UIImage!
     var delegate:ActivityTableViewCellDelegate?
     var indexPath:IndexPath!
 

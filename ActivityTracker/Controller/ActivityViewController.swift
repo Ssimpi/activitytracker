@@ -27,7 +27,6 @@ class ActivityViewController: UIViewController {
         tableView.dataSource = self
         tableView.tableFooterView = UIView()
         lblZeroState.isHidden = false
-       // tableView.estimatedRowHeight = 190
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -69,15 +68,14 @@ extension ActivityViewController:UITableViewDelegate, UITableViewDataSource{
         cell.delegate = self
         cell.indexPath = indexPath
         cell.btnCheckList.tag = indexPath.row
+        let (doneCount, totalCount) = CoreDataManager.sharedInstance.fetchCountOfCheckListForActivity(activityId: activityArray[indexPath.row].id)
+        cell.lblCheckListCount.text = "\(doneCount)/\(totalCount)"
         cell.btnPlayOrPause.tag = indexPath.row
         cell.cellView.layer.cornerRadius = 10
         cell.lblTitle?.text = activityArray[indexPath.row].title
         cell.lblDescription.text = activityArray[indexPath.row].description
         cell.lblDueDate.text = activityArray[indexPath.row].date
-        //       if let returnValue = UserDefaults.standard.object(forKey: "selectedCheckListCount"){
-//        cell.lblCheckListCount.text = returnValue! as? String
-//    }
-
+        
         let (h,m,s) = activityArray[indexPath.row].totalTime.secondsToHoursMinutesSeconds()
         cell.lblTime.text = "\(h):\(m):\(s)"
         
@@ -108,7 +106,7 @@ extension ActivityViewController:UITableViewDelegate, UITableViewDataSource{
         
         return cell
     }
- 
+    
     @IBAction func changeSelect(_ sender: UIButton){
         timer.invalidate()
         if sender.isSelected == true{
@@ -154,9 +152,7 @@ extension ActivityViewController:UITableViewDelegate, UITableViewDataSource{
         editAction.backgroundColor = UIColor(red: 62/255, green: 233/255, blue: 173/255, alpha: 1)
         return [editAction]
     }
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        return 185
-//    }
+    
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
     }
@@ -171,17 +167,18 @@ extension ActivityViewController: ActivityTableViewCellDelegate {
         switch selectedOption {
         case 1:
             let storyBoard: UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
-                    let vc = storyBoard.instantiateViewController(withIdentifier: "CheckListView") as! CheckListViewController
+            let vc = storyBoard.instantiateViewController(withIdentifier: "CheckListView") as! CheckListViewController
             vc.checkListTitle = activityArray[indexpath.row].title
-                self.present(vc, animated: true, completion: nil)
+            vc.selectedActivity = activityArray[indexpath.row]
+            self.present(vc, animated: true, completion: nil)
         case 2:
             print("play")
-        
+            
         default:
             print("nothing")
         }
         tableView.reloadRows(at: [indexpath], with: .automatic)
-}
+    }
     
 }
 extension Int64 {

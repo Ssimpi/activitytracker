@@ -14,10 +14,13 @@
         <attribute name="totalTime" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
     </entity>
     <entity name="CheckList" representedClassName="CheckList" syncable="YES" codeGenerationType="class">
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="isDone" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="parentActivityId" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
         <attribute name="task" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <elements>
         <element name="Activity" positionX="-63" positionY="-18" width="128" height="210"/>
-        <element name="CheckList" positionX="-54" positionY="18" width="128" height="60"/>
+        <element name="CheckList" positionX="-54" positionY="18" width="128" height="105"/>
     </elements>
 </model>
